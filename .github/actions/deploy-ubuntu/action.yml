@@ -13,28 +13,34 @@ runs:
         elif [[ "$CI_DEPLOY_PLATFORM" == "linux-arm64" ]]; then
           export ARCH=arm64
           export PREFIX=aarch64-linux-gnu
-          export CUDA=cuda-repo-rhel8-11-3-local-11.3.0_465.19.01-1.aarch64.rpm
-          export CUDNN=cudnn-11.2-linux-aarch64sbsa-v8.1.1.33.tgz
-          export NCCL=nccl_2.9.6-1+cuda11.3_aarch64.txz
+          export CUDA=cuda-repo-rhel8-11-3-local-11.3.1_465.19.01-1.aarch64.rpm
+          export CUDNN=cudnn-11.3-linux-aarch64sbsa-v8.2.1.32.tgz
+          export NCCL=nccl_2.9.8-1+cuda11.3_aarch64.txz
         elif [[ "$CI_DEPLOY_PLATFORM" == "linux-ppc64le" ]]; then
           export ARCH=ppc64el
           export PREFIX=powerpc64le-linux-gnu
-          export CUDA=cuda-repo-rhel8-11-3-local-11.3.0_465.19.01-1.ppc64le.rpm
-          export CUDNN=cudnn-11.2-linux-ppc64le-v8.1.1.33.tgz
-          export NCCL=nccl_2.9.6-1+cuda11.3_ppc64le.txz
+          export CUDA=cuda-repo-rhel8-11-3-local-11.3.1_465.19.01-1.ppc64le.rpm
+          export CUDNN=cudnn-11.3-linux-ppc64le-v8.2.1.32.tgz
+          export NCCL=nccl_2.9.8-1+cuda11.3_ppc64le.txz
         fi
         echo "ARCH=$ARCH" >> $GITHUB_ENV
         echo "PREFIX=$PREFIX" >> $GITHUB_ENV
 
         if [[ "$CI_DEPLOY_PLATFORM" == "linux-armhf" ]] && [[ -z ${CI_DEPLOY_NEED_NOTOOLS:-} ]]; then
           echo Setting up tools for linux-armhf build
-          dpkg --add-architecture i386
+          dpkg --add-architecture $ARCH
+          echo deb [arch=$ARCH] http://ports.ubuntu.com/ubuntu-ports xenial main restricted universe multiverse >> /etc/apt/sources.list
+          echo deb [arch=$ARCH] http://ports.ubuntu.com/ubuntu-ports xenial-updates main restricted universe multiverse >> /etc/apt/sources.list
+          echo deb [arch=$ARCH] http://ports.ubuntu.com/ubuntu-ports xenial-backports main restricted universe multiverse >> /etc/apt/sources.list
+          echo deb [arch=$ARCH] http://ports.ubuntu.com/ubuntu-ports xenial-security main restricted universe multiverse >> /etc/apt/sources.list
           echo deb [arch=amd64] http://ppa.launchpad.net/openjdk-r/ppa/ubuntu xenial main >> /etc/apt/sources.list
           echo deb [arch=amd64] http://ppa.launchpad.net/deadsnakes/ppa/ubuntu xenial main >> /etc/apt/sources.list
+          sed -i 's/deb http/deb [arch=i386,amd64] http/g' /etc/apt/sources.list
+          apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EB9B1D8886F44E2A
           apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BA6932366A755776
           apt-get update
-          apt-get -y install python python2.7 python-minimal python2.7-minimal libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1
-          apt-get -y install pkg-config ccache clang default-jre-headless openjdk-8-jdk-headless ant python python3.6-dev python3-pip swig git file wget unzip tar bzip2 gzip patch autoconf-archive autogen automake make libtool bison flex perl nasm curl cmake libasound2-dev freeglut3-dev libgtk2.0-dev libusb-dev libffi-dev libbz2-dev zlib1g-dev
+          apt-get -y install python python2.7 python-minimal python2.7-minimal rpm libasound2-dev:$ARCH freeglut3-dev:$ARCH libgtk2.0-dev:$ARCH libusb-dev:$ARCH libusb-1.0-0-dev:$ARCH libffi-dev:$ARCH libbz2-dev:$ARCH zlib1g-dev:$ARCH libxcb1-dev:$ARCH
+          apt-get -y install pkg-config ccache clang default-jre-headless openjdk-8-jdk-headless ant python python3.6-dev python3-pip swig git file wget unzip tar bzip2 gzip patch autoconf-archive autogen automake make libtool bison flex perl nasm curl cmake libffi-dev libbz2-dev zlib1g-dev
           curl -LOJ https://github.com/raspberrypi/tools/archive/master.tar.gz
           curl -LOJ https://github.com/raspberrypi/userland/archive/master.tar.gz
           mkdir -p tools userland
@@ -84,8 +90,8 @@ runs:
 
         if [[ "$CI_DEPLOY_PLATFORM" == "linux-arm64" ]] || [[ "$CI_DEPLOY_PLATFORM" == "linux-ppc64le" ]] && [[ -n ${CI_DEPLOY_NEED_CUDA:-} ]]; then
           echo Installing CUDA, cuDNN, etc
-          curl -LO https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/$CUDA
-          curl -LO https://developer.download.nvidia.com/compute/redist/cudnn/v8.1.1/$CUDNN
+          curl -LO https://developer.download.nvidia.com/compute/cuda/11.3.1/local_installers/$CUDA
+          curl -LO https://developer.download.nvidia.com/compute/redist/cudnn/v8.2.1/$CUDNN
           curl -LO https://developer.download.nvidia.com/compute/redist/nccl/v2.9/$NCCL
 
           rpm -i --force --ignorearch --nodeps $CUDA
@@ -182,8 +188,8 @@ runs:
         export HOME=/root
 
         if [[ -n ${CI_DEPLOY_NEED_GRADLE:-} ]]; then
-          echo Executing Gradle $GRADLE_TASK ${{ matrix.options }} on $MAKEJ processors
-          export GRADLE_OPTIONS="-Dorg.gradle.jvmargs=-Xmx2048m -PjavacppPlatform=$CI_DEPLOY_PLATFORM -PjavacppPlatformExtension=${{ matrix.ext }} ${{ matrix.options }} --info"
+          echo Executing Gradle $GRADLE_TASK ${{ matrix.options }} $CI_DEPLOY_OPTIONS on $MAKEJ processors
+          export GRADLE_OPTIONS="-Dorg.gradle.jvmargs=-Xmx2048m -PjavacppPlatform=$CI_DEPLOY_PLATFORM -PjavacppPlatformExtension=${{ matrix.ext }} ${{ matrix.options }} $CI_DEPLOY_OPTIONS --info"
           gradle clean build $GRADLE_OPTIONS -b $CI_DEPLOY_MODULE/build.gradle
           echo Publishing only now to help avoid race conditions with Gradle
           gradle $GRADLE_TASK $GRADLE_OPTIONS -b $CI_DEPLOY_MODULE/build.gradle --refresh-dependencies
@@ -198,11 +204,11 @@ runs:
           echo Sleeping $SECONDS seconds to help avoid race conditions with Maven
           sleep $SECONDS
 
-          echo Executing Maven $MAVEN_PHASE on $MAKEJ processors
+          echo Executing Maven $MAVEN_PHASE $CI_DEPLOY_OPTIONS on $MAKEJ processors
           export EXT=${{ matrix.ext }}
           export EXT2=${EXT:1}
           export MAVEN_OPTS="-Xss2m"
-          export MAVEN_OPTIONS="clean $MAVEN_PHASE -B -U -e -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.count=3 -Djavacpp.platform=$CI_DEPLOY_PLATFORM -Djavacpp.platform.extension=$EXT $MAVEN_OPTIONS"
+          export MAVEN_OPTIONS="clean $MAVEN_PHASE -B -U -e -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.count=3 -Djavacpp.platform=$CI_DEPLOY_PLATFORM -Djavacpp.platform.extension=$EXT $MAVEN_OPTIONS $CI_DEPLOY_OPTIONS"
           for i in {1..5}; do STATUS=0; mvn $MAVEN_OPTIONS -pl .,$CI_DEPLOY_MODULE && break || STATUS=$? && sleep 60; done; (exit $STATUS)
           for i in {1..5}; do STATUS=0; mvn $MAVEN_OPTIONS -f $CI_DEPLOY_MODULE/platform/$EXT2/pom.xml && break || STATUS=$? && sleep 60; done; (exit $STATUS)
           if [[ -e $CI_DEPLOY_MODULE/platform/redist/pom.xml ]]; then

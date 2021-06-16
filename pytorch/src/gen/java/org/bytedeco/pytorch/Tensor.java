@@ -45,7 +45,7 @@ public class Tensor extends Pointer {
         return (Tensor)super.position(position);
     }
     @Override public Tensor getPointer(long i) {
-        return new Tensor((Pointer)this).position(position + i);
+        return new Tensor((Pointer)this).offsetAddress(i);
     }
 
   public Tensor() { super((Pointer)null); allocate(); }
@@ -176,7 +176,7 @@ public class Tensor extends Pointer {
   public native @NoException Layout layout();
 
   /** Returns a {@code Tensor}'s dtype ({@code TypeMeta}). Defined in TensorMethods.cpp */
-  public native @ByVal @Cast("caffe2::TypeMeta*") @NoException Pointer dtype();
+  public native @ByVal @NoException TypeMeta dtype();
 
   /** Returns a {@code Tensor}'s device. */
   public native @ByVal Device device();
@@ -230,25 +230,25 @@ public class Tensor extends Pointer {
 
   public native Pointer data_ptr();
 
-  public native @Name("data_ptr<jbyte>") BytePointer data_ptr_byte();
+  public native @Name("data_ptr<int8_t>") BytePointer data_ptr_byte();
 
-  public native @Name("data_ptr<jshort>") ShortPointer data_ptr_short();
+  public native @Name("data_ptr<int16_t>") ShortPointer data_ptr_short();
 
-  public native @Name("data_ptr<jint>") IntPointer data_ptr_int();
+  public native @Name("data_ptr<int>") IntPointer data_ptr_int();
 
-  public native @Name("data_ptr<jlong>") LongPointer data_ptr_long();
+  public native @Cast("int64_t*") @Name("data_ptr<int64_t>") LongPointer data_ptr_long();
 
   public native @Name("data_ptr<float>") FloatPointer data_ptr_float();
 
   public native @Name("data_ptr<double>") DoublePointer data_ptr_double();
 
-  public native @Name("item<jbyte>") byte item_byte();
+  public native @Name("item<int8_t>") byte item_byte();
 
-  public native @Name("item<jshort>") short item_short();
+  public native @Name("item<int16_t>") short item_short();
 
-  public native @Name("item<jint>") int item_int();
+  public native @Name("item<int>") int item_int();
 
-  public native @Name("item<jlong>") long item_long();
+  public native @Cast("int64_t") @Name("item<int64_t>") long item_long();
 
   public native @Name("item<float>") float item_float();
 
@@ -597,10 +597,10 @@ public class Tensor extends Pointer {
   public native @ByVal Tensor count_nonzero(@ByVal @Cast({"int64_t*", "std::vector<int64_t>&"}) @StdVector long... dim);
   public native @ByVal Tensor count_nonzero(@ByVal(nullValue = "c10::optional<int64_t>(c10::nullopt)") LongOptional dim);
   public native @ByVal Tensor count_nonzero();
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor cummax(@Cast("int64_t") long dim);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor cummax(@ByVal Dimname dim);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor cummin(@Cast("int64_t") long dim);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor cummin(@ByVal Dimname dim);
+  public native @ByVal TensorTensorTuple cummax(@Cast("int64_t") long dim);
+  public native @ByVal TensorTensorTuple cummax(@ByVal Dimname dim);
+  public native @ByVal TensorTensorTuple cummin(@Cast("int64_t") long dim);
+  public native @ByVal TensorTensorTuple cummin(@ByVal Dimname dim);
   public native @ByVal Tensor cumprod(@Cast("int64_t") long dim, @ByVal(nullValue = "c10::optional<at::ScalarType>(c10::nullopt)") ScalarTypeOptional dtype);
   public native @ByVal Tensor cumprod(@Cast("int64_t") long dim);
   public native @ByRef Tensor cumprod_(@Cast("int64_t") long dim, @ByVal(nullValue = "c10::optional<at::ScalarType>(c10::nullopt)") ScalarTypeOptional dtype);
@@ -743,10 +743,10 @@ public class Tensor extends Pointer {
   public native @Cast("bool") boolean is_same_size(@Const @ByRef Tensor other);
   public native @Cast("bool") boolean is_signed();
   public native @ByVal Tensor kron(@Const @ByRef Tensor other);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor kthvalue(@Cast("int64_t") long k, @Cast("int64_t") long dim/*=-1*/, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor kthvalue(@Cast("int64_t") long k);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor kthvalue(@Cast("int64_t") long k, @ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor kthvalue(@Cast("int64_t") long k, @ByVal Dimname dim);
+  public native @ByVal TensorTensorTuple kthvalue(@Cast("int64_t") long k, @Cast("int64_t") long dim/*=-1*/, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple kthvalue(@Cast("int64_t") long k);
+  public native @ByVal TensorTensorTuple kthvalue(@Cast("int64_t") long k, @ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple kthvalue(@Cast("int64_t") long k, @ByVal Dimname dim);
   public native @ByVal Tensor nan_to_num(@ByVal(nullValue = "c10::optional<double>(c10::nullopt)") DoubleOptional nan, @ByVal(nullValue = "c10::optional<double>(c10::nullopt)") DoubleOptional posinf, @ByVal(nullValue = "c10::optional<double>(c10::nullopt)") DoubleOptional neginf);
   public native @ByVal Tensor nan_to_num();
   public native @ByRef Tensor nan_to_num_(@ByVal(nullValue = "c10::optional<double>(c10::nullopt)") DoubleOptional nan, @ByVal(nullValue = "c10::optional<double>(c10::nullopt)") DoubleOptional posinf, @ByVal(nullValue = "c10::optional<double>(c10::nullopt)") DoubleOptional neginf);
@@ -783,10 +783,10 @@ public class Tensor extends Pointer {
   public native @ByVal Tensor matmul(@Const @ByRef Tensor other);
   public native @ByVal Tensor matrix_power(@Cast("int64_t") long n);
   public native @ByVal Tensor matrix_exp();
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor max(@Cast("int64_t") long dim, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor max(@Cast("int64_t") long dim);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor max(@ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor max(@ByVal Dimname dim);
+  public native @ByVal TensorTensorTuple max(@Cast("int64_t") long dim, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple max(@Cast("int64_t") long dim);
+  public native @ByVal TensorTensorTuple max(@ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple max(@ByVal Dimname dim);
   public native @ByVal Tensor amax(@ByVal(nullValue = "c10::IntArrayRef{}") @Cast("c10::ArrayRef<int64_t>*") LongArrayRef dim, @Cast("bool") boolean keepdim/*=false*/);
   public native @ByVal Tensor amax();
   public native @ByVal Tensor amax(@ByVal(nullValue = "c10::IntArrayRef{}") @Cast({"int64_t*", "std::vector<int64_t>&"}) @StdVector long[] dim, @Cast("bool") boolean keepdim/*=false*/);
@@ -799,27 +799,27 @@ public class Tensor extends Pointer {
   public native @ByVal Tensor mean(@ByVal DimnameArrayRef dim, @Cast("bool") boolean keepdim/*=false*/, @ByVal(nullValue = "c10::optional<at::ScalarType>(c10::nullopt)") ScalarTypeOptional dtype);
   public native @ByVal Tensor mean(@ByVal DimnameArrayRef dim);
   public native @ByVal Tensor median();
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor median(@Cast("int64_t") long dim, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor median(@Cast("int64_t") long dim);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor median(@ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor median(@ByVal Dimname dim);
+  public native @ByVal TensorTensorTuple median(@Cast("int64_t") long dim, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple median(@Cast("int64_t") long dim);
+  public native @ByVal TensorTensorTuple median(@ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple median(@ByVal Dimname dim);
   public native @ByVal Tensor nanmedian();
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor nanmedian(@Cast("int64_t") long dim, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor nanmedian(@Cast("int64_t") long dim);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor nanmedian(@ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor nanmedian(@ByVal Dimname dim);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor min(@Cast("int64_t") long dim, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor min(@Cast("int64_t") long dim);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor min(@ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor min(@ByVal Dimname dim);
+  public native @ByVal TensorTensorTuple nanmedian(@Cast("int64_t") long dim, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple nanmedian(@Cast("int64_t") long dim);
+  public native @ByVal TensorTensorTuple nanmedian(@ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple nanmedian(@ByVal Dimname dim);
+  public native @ByVal TensorTensorTuple min(@Cast("int64_t") long dim, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple min(@Cast("int64_t") long dim);
+  public native @ByVal TensorTensorTuple min(@ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple min(@ByVal Dimname dim);
   public native @ByVal Tensor amin(@ByVal(nullValue = "c10::IntArrayRef{}") @Cast("c10::ArrayRef<int64_t>*") LongArrayRef dim, @Cast("bool") boolean keepdim/*=false*/);
   public native @ByVal Tensor amin();
   public native @ByVal Tensor amin(@ByVal(nullValue = "c10::IntArrayRef{}") @Cast({"int64_t*", "std::vector<int64_t>&"}) @StdVector long[] dim, @Cast("bool") boolean keepdim/*=false*/);
   public native @ByVal Tensor mm(@Const @ByRef Tensor mat2);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor mode(@Cast("int64_t") long dim/*=-1*/, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor mode();
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor mode(@ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor mode(@ByVal Dimname dim);
+  public native @ByVal TensorTensorTuple mode(@Cast("int64_t") long dim/*=-1*/, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple mode();
+  public native @ByVal TensorTensorTuple mode(@ByVal Dimname dim, @Cast("bool") boolean keepdim/*=false*/);
+  public native @ByVal TensorTensorTuple mode(@ByVal Dimname dim);
   public native @ByVal Tensor mul(@Const @ByRef Tensor other);
   public native @ByRef Tensor mul_(@Const @ByRef Tensor other);
   public native @ByVal Tensor mul(@ByVal Scalar other);
@@ -872,7 +872,7 @@ public class Tensor extends Pointer {
   public native @ByVal Tensor relu();
   public native @ByRef Tensor relu_();
   public native @ByVal Tensor prelu(@Const @ByRef Tensor weight);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor prelu_backward(@Const @ByRef Tensor grad_output, @Const @ByRef Tensor weight);
+  public native @ByVal TensorTensorTuple prelu_backward(@Const @ByRef Tensor grad_output, @Const @ByRef Tensor weight);
   public native @ByVal Tensor hardshrink(@ByVal(nullValue = "c10::Scalar(0.5)") Scalar lambd);
   public native @ByVal Tensor hardshrink();
   public native @ByVal Tensor hardshrink_backward(@Const @ByRef Tensor grad_out, @ByVal Scalar lambd);
@@ -897,7 +897,7 @@ public class Tensor extends Pointer {
   public native @Cast("int64_t") long size(@ByVal Dimname dim);
   public native @ByVal Tensor slice(@Cast("int64_t") long dim/*=0*/, @ByVal(nullValue = "c10::optional<int64_t>(0)") LongOptional start, @ByVal(nullValue = "c10::optional<int64_t>(9223372036854775807L)") LongOptional end, @Cast("int64_t") long step/*=1*/);
   public native @ByVal Tensor slice();
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor slogdet();
+  public native @ByVal TensorTensorTuple slogdet();
   public native @ByVal Tensor smm(@Const @ByRef Tensor mat2);
   public native @ByVal Tensor softmax(@Cast("int64_t") long dim, @ByVal(nullValue = "c10::optional<at::ScalarType>(c10::nullopt)") ScalarTypeOptional dtype);
   public native @ByVal Tensor softmax(@Cast("int64_t") long dim);
@@ -1264,15 +1264,15 @@ public class Tensor extends Pointer {
   public native @ByRef Tensor addcmul_(@Const @ByRef Tensor tensor1, @Const @ByRef Tensor tensor2);
   public native @ByVal Tensor addcdiv(@Const @ByRef Tensor tensor1, @Const @ByRef Tensor tensor2, @ByVal(nullValue = "c10::Scalar(1)") Scalar value);
   public native @ByVal Tensor addcdiv(@Const @ByRef Tensor tensor1, @Const @ByRef Tensor tensor2);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor lstsq(@Const @ByRef Tensor A);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor triangular_solve(@Const @ByRef Tensor A, @Cast("bool") boolean upper/*=true*/, @Cast("bool") boolean transpose/*=false*/, @Cast("bool") boolean unitriangular/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor triangular_solve(@Const @ByRef Tensor A);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor symeig(@Cast("bool") boolean eigenvectors/*=false*/, @Cast("bool") boolean upper/*=true*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor symeig();
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor eig(@Cast("bool") boolean eigenvectors/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor eig();
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor,at::Tensor>*") Tensor svd(@Cast("bool") boolean some/*=true*/, @Cast("bool") boolean compute_uv/*=true*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor,at::Tensor>*") Tensor svd();
+  public native @ByVal TensorTensorTuple lstsq(@Const @ByRef Tensor A);
+  public native @ByVal TensorTensorTuple triangular_solve(@Const @ByRef Tensor A, @Cast("bool") boolean upper/*=true*/, @Cast("bool") boolean transpose/*=false*/, @Cast("bool") boolean unitriangular/*=false*/);
+  public native @ByVal TensorTensorTuple triangular_solve(@Const @ByRef Tensor A);
+  public native @ByVal TensorTensorTuple symeig(@Cast("bool") boolean eigenvectors/*=false*/, @Cast("bool") boolean upper/*=true*/);
+  public native @ByVal TensorTensorTuple symeig();
+  public native @ByVal TensorTensorTuple eig(@Cast("bool") boolean eigenvectors/*=false*/);
+  public native @ByVal TensorTensorTuple eig();
+  public native @ByVal TensorTensorTensorTuple svd(@Cast("bool") boolean some/*=true*/, @Cast("bool") boolean compute_uv/*=true*/);
+  public native @ByVal TensorTensorTensorTuple svd();
   public native @ByVal Tensor swapaxes(@Cast("int64_t") long axis0, @Cast("int64_t") long axis1);
   public native @ByRef Tensor swapaxes_(@Cast("int64_t") long axis0, @Cast("int64_t") long axis1);
   public native @ByVal Tensor swapdims(@Cast("int64_t") long dim0, @Cast("int64_t") long dim1);
@@ -1281,12 +1281,12 @@ public class Tensor extends Pointer {
   public native @ByVal Tensor cholesky();
   public native @ByVal Tensor cholesky_solve(@Const @ByRef Tensor input2, @Cast("bool") boolean upper/*=false*/);
   public native @ByVal Tensor cholesky_solve(@Const @ByRef Tensor input2);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor solve(@Const @ByRef Tensor A);
+  public native @ByVal TensorTensorTuple solve(@Const @ByRef Tensor A);
   public native @ByVal Tensor cholesky_inverse(@Cast("bool") boolean upper/*=false*/);
   public native @ByVal Tensor cholesky_inverse();
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor qr(@Cast("bool") boolean some/*=true*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor qr();
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor geqrf();
+  public native @ByVal TensorTensorTuple qr(@Cast("bool") boolean some/*=true*/);
+  public native @ByVal TensorTensorTuple qr();
+  public native @ByVal TensorTensorTuple geqrf();
   public native @ByVal Tensor orgqr(@Const @ByRef Tensor input2);
   public native @ByVal Tensor ormqr(@Const @ByRef Tensor input2, @Const @ByRef Tensor input3, @Cast("bool") boolean left/*=true*/, @Cast("bool") boolean transpose/*=false*/);
   public native @ByVal Tensor ormqr(@Const @ByRef Tensor input2, @Const @ByRef Tensor input3);
@@ -1339,17 +1339,17 @@ public class Tensor extends Pointer {
   public native @ByVal Tensor nanquantile(double q);
   public native @ByVal Tensor nanquantile(@Const @ByRef Tensor q, @ByVal(nullValue = "c10::optional<int64_t>(c10::nullopt)") LongOptional dim, @Cast("bool") boolean keepdim/*=false*/);
   public native @ByVal Tensor nanquantile(@Const @ByRef Tensor q);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor sort(@Cast("int64_t") long dim/*=-1*/, @Cast("bool") boolean descending/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor sort();
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor sort(@ByVal Dimname dim, @Cast("bool") boolean descending/*=false*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor sort(@ByVal Dimname dim);
+  public native @ByVal TensorTensorTuple sort(@Cast("int64_t") long dim/*=-1*/, @Cast("bool") boolean descending/*=false*/);
+  public native @ByVal TensorTensorTuple sort();
+  public native @ByVal TensorTensorTuple sort(@ByVal Dimname dim, @Cast("bool") boolean descending/*=false*/);
+  public native @ByVal TensorTensorTuple sort(@ByVal Dimname dim);
   public native @ByVal Tensor msort();
   public native @ByVal Tensor argsort(@Cast("int64_t") long dim/*=-1*/, @Cast("bool") boolean descending/*=false*/);
   public native @ByVal Tensor argsort();
   public native @ByVal Tensor argsort(@ByVal Dimname dim, @Cast("bool") boolean descending/*=false*/);
   public native @ByVal Tensor argsort(@ByVal Dimname dim);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor topk(@Cast("int64_t") long k, @Cast("int64_t") long dim/*=-1*/, @Cast("bool") boolean largest/*=true*/, @Cast("bool") boolean sorted/*=true*/);
-  public native @ByVal @Cast("std::tuple<at::Tensor,at::Tensor>*") Tensor topk(@Cast("int64_t") long k);
+  public native @ByVal TensorTensorTuple topk(@Cast("int64_t") long k, @Cast("int64_t") long dim/*=-1*/, @Cast("bool") boolean largest/*=true*/, @Cast("bool") boolean sorted/*=true*/);
+  public native @ByVal TensorTensorTuple topk(@Cast("int64_t") long k);
   public native @ByVal Tensor all();
   public native @ByVal Tensor any();
   public native @ByVal Tensor renorm(@ByVal Scalar p, @Cast("int64_t") long dim, @ByVal Scalar maxnorm);
@@ -1389,10 +1389,10 @@ public class Tensor extends Pointer {
   // Before that change, we make this method to maintain BC for C++ usage like
   // `x.to(y.dtype)`.
   // TODO: remove following two after at::kDouble and its friends are TypeMeta's.
-  public native @ByVal Tensor to(@ByVal @Cast("caffe2::TypeMeta*") Pointer type_meta, @Cast("bool") boolean non_blocking/*=false*/, @Cast("bool") boolean copy/*=false*/);
-  public native @ByVal Tensor to(@ByVal @Cast("caffe2::TypeMeta*") Pointer type_meta);
-  public native @ByVal Tensor to(@ByVal Device device, @ByVal @Cast("caffe2::TypeMeta*") Pointer type_meta, @Cast("bool") boolean non_blocking/*=false*/, @Cast("bool") boolean copy/*=false*/);
-  public native @ByVal Tensor to(@ByVal Device device, @ByVal @Cast("caffe2::TypeMeta*") Pointer type_meta);
+  public native @ByVal Tensor to(@ByVal TypeMeta type_meta, @Cast("bool") boolean non_blocking/*=false*/, @Cast("bool") boolean copy/*=false*/);
+  public native @ByVal Tensor to(@ByVal TypeMeta type_meta);
+  public native @ByVal Tensor to(@ByVal Device device, @ByVal TypeMeta type_meta, @Cast("bool") boolean non_blocking/*=false*/, @Cast("bool") boolean copy/*=false*/);
+  public native @ByVal Tensor to(@ByVal Device device, @ByVal TypeMeta type_meta);
 
   /** NOTE: This is similar to the legacy {@code .data()} function on {@code Variable}, and is intended
    *  to be used from functions that need to access the {@code Variable}'s equivalent {@code Tensor}

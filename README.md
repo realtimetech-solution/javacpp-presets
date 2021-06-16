@@ -32,6 +32,7 @@ JavaCPP Presets
 [![scipy](https://github.com/bytedeco/javacpp-presets/workflows/scipy/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Ascipy)
 [![gym](https://github.com/bytedeco/javacpp-presets/workflows/gym/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Agym)
 [![llvm](https://github.com/bytedeco/javacpp-presets/workflows/llvm/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Allvm)
+[![libffi](https://github.com/bytedeco/javacpp-presets/workflows/libffi/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Alibffi)
 [![libpostal](https://github.com/bytedeco/javacpp-presets/workflows/libpostal/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Alibpostal)
 [![leptonica](https://github.com/bytedeco/javacpp-presets/workflows/leptonica/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Aleptonica)
 [![tesseract](https://github.com/bytedeco/javacpp-presets/workflows/tesseract/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Atesseract)
@@ -43,8 +44,10 @@ JavaCPP Presets
 [![mxnet](https://github.com/bytedeco/javacpp-presets/workflows/mxnet/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Amxnet)
 [![pytorch](https://github.com/bytedeco/javacpp-presets/workflows/pytorch/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Apytorch)
 [![tensorflow](https://github.com/bytedeco/javacpp-presets/workflows/tensorflow/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Atensorflow)
+[![tensorflow-lite](https://github.com/bytedeco/javacpp-presets/workflows/tensorflow-lite/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Atensorflow-lite)
 [![tensorrt](https://github.com/bytedeco/javacpp-presets/workflows/tensorrt/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Atensorrt)
 [![ale](https://github.com/bytedeco/javacpp-presets/workflows/ale/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Aale)
+[![depthai](https://github.com/bytedeco/javacpp-presets/workflows/depthai/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Adepthai)
 [![onnx](https://github.com/bytedeco/javacpp-presets/workflows/onnx/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Aonnx)
 [![ngraph](https://github.com/bytedeco/javacpp-presets/workflows/ngraph/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Angraph)
 [![onnxruntime](https://github.com/bytedeco/javacpp-presets/workflows/onnxruntime/badge.svg)](https://github.com/bytedeco/javacpp-presets/actions?query=workflow%3Aonnxruntime)
@@ -169,7 +172,7 @@ Each child module in turn relies by default on the included [`cppbuild.sh` scrip
  * OpenCV 4.5.2  https://opencv.org/releases.html
  * FFmpeg 4.4.x  http://ffmpeg.org/download.html
  * FlyCapture 2.13.x  https://www.flir.com/products/flycapture-sdk
- * Spinnaker 1.27.x https://www.flir.com/products/spinnaker-sdk
+ * Spinnaker 2.4.x https://www.flir.com/products/spinnaker-sdk
  * libdc1394 2.2.6  http://sourceforge.net/projects/libdc1394/files/
  * libfreenect 0.5.7  https://github.com/OpenKinect/libfreenect
  * libfreenect2 0.2.0  https://github.com/OpenKinect/libfreenect2
@@ -179,40 +182,43 @@ Each child module in turn relies by default on the included [`cppbuild.sh` scrip
  * ARToolKitPlus 2.3.1  https://launchpad.net/artoolkitplus
  * Chilitags  https://github.com/chili-epfl/chilitags
  * flandmark 1.07  https://github.com/uricamic/flandmark
- * Arrow 3.0.0  https://arrow.apache.org/install/
+ * Arrow 4.0.x  https://arrow.apache.org/install/
  * HDF5 1.12.0  https://www.hdfgroup.org/downloads/
  * Hyperscan 5.4.x  https://github.com/intel/hyperscan
  * MKL 2021.x  https://software.intel.com/mkl
  * MKL-DNN 0.21.x  https://github.com/oneapi-src/oneDNN
  * DNNL 2.2.x  https://github.com/oneapi-src/oneDNN
- * OpenBLAS 0.3.14  http://www.openblas.net/
+ * OpenBLAS 0.3.15  http://www.openblas.net/
  * ARPACK-NG 3.8.0  https://github.com/opencollab/arpack-ng
  * CMINPACK 1.3.8  https://github.com/devernay/cminpack
  * FFTW 3.3.9  http://www.fftw.org/download.html
- * GSL 2.6  http://www.gnu.org/software/gsl/#downloading
+ * GSL 2.7  http://www.gnu.org/software/gsl/#downloading
  * CPython 3.9.x  https://www.python.org/downloads/
  * NumPy 1.20.x  https://github.com/numpy/numpy
  * SciPy 1.6.x  https://github.com/scipy/scipy
  * Gym 0.18.x  https://github.com/openai/gym
  * LLVM 12.x.x  http://llvm.org/releases/download.html
+ * libffi 3.3  https://github.com/libffi/libffi
  * libpostal 1.1-alpha  https://github.com/openvenues/libpostal
- * Leptonica 1.80.0  http://www.leptonica.org/download.html
+ * Leptonica 1.81.0  http://www.leptonica.org/download.html
  * Tesseract 4.1.1  https://github.com/tesseract-ocr/tesseract
  * Caffe 1.0  https://github.com/BVLC/caffe
  * OpenPose 1.7.0  https://github.com/CMU-Perceptual-Computing-Lab/openpose
  * CUDA 11.3.x  https://developer.nvidia.com/cuda-downloads
-   * cuDNN 8.1.x  https://developer.nvidia.com/cudnn
+   * cuDNN 8.2.x  https://developer.nvidia.com/cudnn
    * NCCL 2.9.x  https://developer.nvidia.com/nccl
  * NVIDIA Video Codec SDK 11.0.x  https://developer.nvidia.com/nvidia-video-codec-sdk
  * OpenCL 3.0  https://github.com/KhronosGroup/OpenCL-ICD-Loader
  * MXNet 1.8.0  https://github.com/apache/incubator-mxnet
  * PyTorch 1.8.x  https://github.com/pytorch/pytorch
  * TensorFlow 1.15.x  https://github.com/tensorflow/tensorflow
+ * TensorFlow Lite 2.5.x  https://github.com/tensorflow/tensorflow
  * TensorRT 7.x  https://developer.nvidia.com/tensorrt
  * The Arcade Learning Environment 0.6.x  https://github.com/mgbellemare/Arcade-Learning-Environment
+ * DepthAI 2.5.0  https://github.com/luxonis/depthai-core
  * ONNX 1.9.x  https://github.com/onnx/onnx
  * nGraph 0.26.0  https://github.com/NervanaSystems/ngraph
- * ONNX Runtime 1.7.x  https://github.com/microsoft/onnxruntime
+ * ONNX Runtime 1.8.x  https://github.com/microsoft/onnxruntime
  * TVM 0.7.0  https://github.com/apache/tvm
  * LiquidFun  http://google.github.io/liquidfun/
  * Qt 5.15.x  https://download.qt.io/archive/qt/

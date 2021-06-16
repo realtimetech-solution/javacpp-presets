@@ -20,13 +20,13 @@ public class TensorTensorOptional extends Pointer {
     static { Loader.load(); }
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
     public TensorTensorOptional(Pointer p) { super(p); }
-    public TensorTensorOptional(Tensor value) { put(value); }
+    public TensorTensorOptional(TensorTensorTuple value) { this(); put(value); }
     public TensorTensorOptional()       { allocate();  }
     private native void allocate();
     public native @Name("operator =") @ByRef TensorTensorOptional put(@ByRef TensorTensorOptional x);
 
 
-    @Name("value") public native @Cast("std::tuple<at::Tensor,at::Tensor>*") @ByRef Tensor get();
-    @ValueSetter public native TensorTensorOptional put(@Cast("std::tuple<at::Tensor,at::Tensor>*") @ByRef Tensor value);
+    @Name("value") public native @ByRef TensorTensorTuple get();
+    @ValueSetter public native TensorTensorOptional put(@ByRef TensorTensorTuple value);
 }
 
